@@ -19,6 +19,7 @@ app.UseSwaggerUI(c =>
 });
 
 app.MapGet("/", () => "Mini ASP NET application");
+
 // Sum?a=5&b=6
 app.MapGet("/Sum", (int a, int b) => $"{a} + {b} = {a + b}");
 
@@ -52,8 +53,8 @@ app.MapGet("/Redirect", (async (context) =>
      context.Response.Redirect("/Fail");
 }));
 
-app.MapGet("/pizzas/{id}", (int id) => PizzaDB.GetPizza(id));
 app.MapGet("/pizzas", () => PizzaDB.GetPizzas());
+app.MapGet("/pizzas/{id}", (int id) => PizzaDB.GetPizza(id));
 app.MapPost("/pizzas", (Pizza pizza) => PizzaDB.CreatePizza(pizza));
 app.MapPut("/pizzas", (Pizza pizza) => PizzaDB.UpdatePizza(pizza));
 app.MapDelete("/pizzas/{id}", (int id) => PizzaDB.RemovePizza(id));

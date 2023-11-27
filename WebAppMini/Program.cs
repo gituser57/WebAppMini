@@ -12,46 +12,21 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
-app.UseSwagger();
-app.UseSwaggerUI(c =>
+
+
+if (app.Environment.IsDevelopment())
 {
-    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Todo API V1");
-});
+    app.UseSwagger();
+    app.UseSwaggerUI();
+};
 
 app.MapGet("/", () => "Mini ASP NET application");
+//or
+//app.MapGet("/", (async (context) =>
+//{
+//    context.Response.Redirect("/Swagger");
+//}));
 
-// Sum?a=5&b=6
-app.MapGet("/Sum", (int a, int b) => $"{a} + {b} = {a + b}");
-
-// Sum1?a=5&b=6&c=8
-app.MapGet("/Sum1", (async (context) =>
-{
-    context.Response.ContentType = "text/html; charset=utf-8";
-    var paramList = context.Request.Query;
-    int paramsSum = 0;
-    /*
-    paramsSum = Int32.Parse(context.Request.Query["a"]) + Int32.Parse(context.Request.Query["b"] +
-        Int32.Parse(context.Request.Query["c"]));
-    */
-    foreach (var param in paramList)
-    {
-        paramsSum += Int32.Parse(param.Value);
-    }
-    await context.Response.WriteAsync($"<p>Path: {context.Request.Path}</p>" +
-        $"<p>QueryString: {context.Request.QueryString}</p>" +
-        $"<p> Parametrs Sum is {paramsSum}");
-}));
-
-app.MapGet("/Fail", (async (context) =>
-{ 
-        context.Response.StatusCode = 404;
-    await context.Response.WriteAsync("Resource Not Found");
-}));
-
-app.MapGet("/Redirect", (async (context) =>
-{
-     context.Response.Redirect("/Fail");
-}));
 
 app.MapGet("/pizzas", () => PizzaDB.GetPizzas());
 app.MapGet("/pizzas/{id}", (int id) => PizzaDB.GetPizza(id));
@@ -62,3 +37,9 @@ app.MapDelete("/pizzas/{id}", (int id) => PizzaDB.RemovePizza(id));
 app.Run();
 
 
+
+//app.UseSwagger();
+//app.UseSwaggerUI(c =>
+//{
+//    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Todo API V1");
+//});
